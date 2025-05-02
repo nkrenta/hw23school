@@ -35,7 +35,7 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping("/students")
+    @GetMapping("/all")
     public Map<Long, List<Student>> getAllStudentsInfo() {
         return studentService.getAllStudents();
     }

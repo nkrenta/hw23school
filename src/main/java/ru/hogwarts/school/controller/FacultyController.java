@@ -35,7 +35,7 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("/faculties")
+    @GetMapping("/all")
     public Map<Long, List<Faculty>> getAllFacultiesInfo() {
         return facultyService.getAllFaculties();
     }
