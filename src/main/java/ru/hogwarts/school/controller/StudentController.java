@@ -4,21 +4,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, StudentRepository studentRepository) {
         this.studentService = studentService;
+        this.studentRepository = studentRepository;
     }
 
     @PostMapping
@@ -36,14 +38,14 @@ public class StudentController {
     }
 
     @GetMapping("/all")
-    public Map<Long, List<Student>> getAllStudentsInfo() {
-        return studentService.getAllStudents();
+    public ResponseEntity<Collection<Student>> getAllStudentsInfo() {
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-        if (age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
+    public ResponseEntity<List<Student>> findByAge(@RequestParam(required = false) Integer age) {
+        if (age != 0 && age > 0) {
+            return ResponseEntity.ok(studentRepository.findByAge(age));
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
