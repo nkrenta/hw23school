@@ -9,7 +9,7 @@ import java.util.*;
 public class StudentService {
 
     private final HashMap<Long, Student> studentMap = new HashMap<>();
-    private Long COUNTER = 0L;
+    private long COUNTER = 0;
 
     public Student addStudent(Student student) {
         student.setId(++COUNTER);
@@ -47,7 +47,7 @@ public class StudentService {
         return student;
     }
 
-    public void deleteStudent(Long id) {
+    public void deleteStudent(long id) {
         studentMap.remove(id);
     }
 }

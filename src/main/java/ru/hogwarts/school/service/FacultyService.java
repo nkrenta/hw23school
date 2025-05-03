@@ -9,7 +9,7 @@ import java.util.*;
 public class FacultyService {
 
     private final HashMap<Long, Faculty> facultyMap = new HashMap<>();
-    private Long COUNTER = 0L;
+    private long COUNTER = 0;
 
     public Faculty addFaculty(Faculty faculty) {
         faculty.setId(++COUNTER);
@@ -17,7 +17,7 @@ public class FacultyService {
         return faculty;
     }
 
-    public Faculty findFaculty(Long id) {
+    public Faculty findFaculty(long id) {
         return facultyMap.get(id);
     }
 
@@ -47,7 +47,7 @@ public class FacultyService {
         return faculty;
     }
 
-    public void deleteFaculty(Long id) {
+    public void deleteFaculty(long id) {
         facultyMap.remove(id);
     }
 }
