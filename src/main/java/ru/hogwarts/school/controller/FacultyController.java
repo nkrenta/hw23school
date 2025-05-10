@@ -4,21 +4,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
 
     private final FacultyService facultyService;
+    private final FacultyRepository facultyRepository;
 
-    public FacultyController(FacultyService facultyService) {
+    public FacultyController(FacultyService facultyService, FacultyRepository facultyRepository) {
         this.facultyService = facultyService;
+        this.facultyRepository = facultyRepository;
     }
 
     @PostMapping
@@ -36,14 +38,14 @@ public class FacultyController {
     }
 
     @GetMapping("/all")
-    public Map<Long, List<Faculty>> getAllFacultiesInfo() {
-        return facultyService.getAllFaculties();
+    public ResponseEntity<Collection<Faculty>> getAllFacultiesInfo() {
+        return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
+    public ResponseEntity<List<Faculty>> findByColorLike(@RequestParam(required = false) String color) {
         if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyService.findByColor(color));
+            return ResponseEntity.ok(facultyRepository.findByColorLike(color));
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
