@@ -43,10 +43,9 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
-    @GetMapping()
-    public ResponseEntity<Collection<Faculty>> findByNameOrColorIgnoreCase(@RequestParam(required = false) String name, @RequestParam(required = false) String color) {
-        Collection<Faculty> faculties = facultyRepository.findByNameOrColorIgnoreCase(name, color);
-        return ResponseEntity.ok(faculties);
+    @GetMapping("/findby")
+    public List<Faculty> findByNameOrColorIgnoreCase(@RequestParam(required = false) String name, @RequestParam(required = false) String color) {
+        return facultyRepository.findByNameOrColorIgnoreCase(name, color);
     }
 
     @GetMapping("/faculties/{id}/students")

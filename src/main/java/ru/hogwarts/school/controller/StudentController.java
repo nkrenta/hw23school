@@ -52,15 +52,15 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @GetMapping("/{min}/{max}")
-    public ResponseEntity<Collection<Student>> findByAgeBetween(@PathVariable(required = false) Integer min, @PathVariable(required = false) Integer max) {
+    @GetMapping("/agebetween")
+    public List<Student> findByAgeBetween(@RequestParam(required = false) Integer min, @RequestParam(required = false) Integer max) {
         if (min != null && min >= 0) {
             if (max != null && max >= 0) {
-                return ResponseEntity.ok(studentRepository.findByAgeBetweenOrderById(min, max));
+                return studentRepository.findByAgeBetweenOrderById(min, max);
             }
-            return ResponseEntity.ok(Collections.emptyList());
+            return Collections.emptyList();
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return Collections.emptyList();
     }
 
     @GetMapping("/students/{id}/faculty")
