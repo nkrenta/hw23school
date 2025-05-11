@@ -3,6 +3,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
@@ -10,6 +11,7 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
@@ -48,6 +50,27 @@ public class StudentController {
             return ResponseEntity.ok(studentRepository.findByAge(age));
         }
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("/{min}/{max}")
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@PathVariable(required = false) Integer min, @PathVariable(required = false) Integer max) {
+        if (min != null && min >= 0) {
+            if (max != null && max >= 0) {
+                return ResponseEntity.ok(studentRepository.findByAgeBetweenOrderById(min, max));
+            }
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @GetMapping("/students/{id}/faculty")
+    public ResponseEntity<Faculty> getStudentFaculty(@PathVariable Long id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            return ResponseEntity.ok(student.get().getFaculty());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping
