@@ -1,9 +1,11 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class Faculty {
@@ -12,6 +14,7 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "faculty")
     private List<Student> students;
 
@@ -35,6 +38,13 @@ public class Faculty {
         this.students = students;
     }
 
+    public List<String> getFacultyStudents() {
+        List<Student> studentList = students;
+        return studentList.stream()
+                .map(student -> "student's id: " + student.getId() + "; student's name: " + student.getName() + "; student's age: " + student.getAge() + "; student's faculty: " + student.getFaculty().getName() + " ; color: " + student.getFaculty().getColor())
+                .collect(Collectors.toList());
+    }
+
     public String getName() {
         return name;
     }
@@ -53,12 +63,10 @@ public class Faculty {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                "id=" + id +
-                ", students=" + students +
-                ", name='" + name + '\'' +
+        return "{" + "name='" + name + '\'' +
+                ", id='" + id + '\'' +
                 ", color='" + color + '\'' +
-                '}';
+                "}";
     }
 
     @Override

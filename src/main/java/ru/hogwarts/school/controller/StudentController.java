@@ -1,9 +1,9 @@
 package ru.hogwarts.school.controller;
 
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
@@ -11,7 +11,6 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
@@ -64,10 +63,12 @@ public class StudentController {
     }
 
     @GetMapping("/students/{id}/faculty")
-    public ResponseEntity<Faculty> getStudentFaculty(@PathVariable Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        if (student.isPresent()) {
-            return ResponseEntity.ok(student.get().getFaculty());
+    public ResponseEntity<String> getStudentFaculty(@PathVariable long id) {
+        if (studentRepository.findById(id) != null) {
+            Student student = studentRepository.findById(id);
+            Hibernate.initialize(student.getFaculty());
+            System.out.println(student.getFaculty());
+            return student.getFaculty() == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(student.getFaculty().toString());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
