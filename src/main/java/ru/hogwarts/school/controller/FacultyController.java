@@ -8,8 +8,8 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/faculty")
@@ -42,12 +42,16 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Faculty>> findByColorLike(@RequestParam(required = false) String color) {
-        if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyRepository.findByColorLike(color));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
+    @GetMapping("/findby")
+    public List<Faculty> findByNameOrColorIgnoreCase(@RequestParam(required = false) String name, @RequestParam(required = false) String color) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(name, color);
+    }
+
+    @GetMapping("/faculties/{id}/students")
+    public ResponseEntity<List<String>> getFacultyStudents(@PathVariable Long id) {
+        Optional<Faculty> faculty = facultyRepository.findById(id);
+        return faculty.map(f -> ResponseEntity.ok(f.getFacultyStudents()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PutMapping
