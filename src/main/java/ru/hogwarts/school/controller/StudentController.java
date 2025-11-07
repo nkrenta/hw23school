@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,29 @@ public class StudentController {
             return ResponseEntity.ok(studentRepository.findByAge(age));
         }
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("/agebetween")
+    public List<Student> findByAgeBetween(@RequestParam(required = false) Integer min, @RequestParam(required = false) Integer max) {
+        if (min != null && min >= 0) {
+            if (max != null && max >= 0) {
+                return studentRepository.findByAgeBetweenOrderById(min, max);
+            }
+            return Collections.emptyList();
+        }
+        return Collections.emptyList();
+    }
+
+    @GetMapping("/students/{id}/faculty")
+    public ResponseEntity<String> getStudentFaculty(@PathVariable long id) {
+        if (studentRepository.findById(id) != null) {
+            Student student = studentRepository.findById(id);
+            Hibernate.initialize(student.getFaculty());
+            System.out.println(student.getFaculty());
+            return student.getFaculty() == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(student.getFaculty().toString());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping
