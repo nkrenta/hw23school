@@ -18,7 +18,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Service
 public class StudentService {
 
-    @Value("${avatars.dir.path}")
+    @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
     private final StudentRepository studentRepository;
@@ -64,7 +64,7 @@ public class StudentService {
                 InputStream is = file.getInputStream();
                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
                 BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+                BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
         ) {
             bis.transferTo(bos);
         }
